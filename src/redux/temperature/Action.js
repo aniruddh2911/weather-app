@@ -2,7 +2,8 @@ import axios from 'axios'
 import {
     FETCH_TEMPERATURE_REQUEST,
     FETCH_TEMPERATURE_SUCCESS, 
-    FETCH_TEMPERATURE_FAILURE
+    FETCH_TEMPERATURE_FAILURE,
+    UPDATE_CITY
 } from './Types'
 
 export const fetchTemperatureRequest = () => {
@@ -11,10 +12,10 @@ export const fetchTemperatureRequest = () => {
     }
 }
 
-export const fetchTemperatureSuccess = temperature => {
+export const fetchTemperatureSuccess = temp => {
     return {
         type: FETCH_TEMPERATURE_SUCCESS,
-        payload: temperature
+        payload: temp
     }
 }
 
@@ -26,17 +27,26 @@ export const fetchTemperatureFailure = error => {
 }
 
 export const fetchTemperature = () => {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(fetchTemperatureRequest())
+        const city = getState().temperature.city
+        console.log(city)
         axios
-        .get(`http://api.openweathermap.org/data/2.5/weather?lat=26.846&lon=80.946&appid=1d92bbde753a2e7dc26f0915a251da17`)
+        .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&APPID=edc1625d79007658230e4a1a315b2597`)
         .then(respose => {
-             const temperature = respose.data.main.temp
-             dispatch(fetchTemperatureSuccess(temperature))
+             const temp = respose.data.main.temp
+             dispatch(fetchTemperatureSuccess(temp))
          })
          .catch(error => {
              const errorMsg = error.message
              dispatch(fetchTemperatureFailure(errorMsg))
          })
+    }
+}
+
+export const updateCity = city => {
+    return {
+        type: UPDATE_CITY,
+        payload: city
     }
 }

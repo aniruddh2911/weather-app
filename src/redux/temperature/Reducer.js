@@ -1,14 +1,17 @@
 import {
+    FETCH_TEMPERATURE_FAILURE,
     FETCH_TEMPERATURE_REQUEST,
     FETCH_TEMPERATURE_SUCCESS,
-    FETCH_TEMPERATURE_FAILURE
+    UPDATE_CITY
 } from "./Types";
 
 const initialState = {
     loading: false,
-    temperature: '',
-    error: ''
+    temp: '',
+    error: '',
+    city: 'Karanpur'
 }
+
 const tempratureReducer = (state = initialState, action) => {
     switch (action.type) {
         case FETCH_TEMPERATURE_REQUEST:
@@ -18,17 +21,26 @@ const tempratureReducer = (state = initialState, action) => {
             }
         case FETCH_TEMPERATURE_SUCCESS:
             return {
+                ...state,
                 loading: false,
-                temperature: action.payload,
+                temp: action.payload,
                 error: ''
             }
         case FETCH_TEMPERATURE_FAILURE:
             return {
+                ...state,
                 loading: false,
-                temperature: '',
+                temp: '',
                 error: action.payload
             }
+        case UPDATE_CITY:
+            return {
+                ...state,
+                city: action.payload
+            }
+
         default: return state
     }
 }
+
 export default tempratureReducer;
